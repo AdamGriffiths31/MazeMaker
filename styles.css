@@ -1,0 +1,42 @@
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+pre {
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+#maze-controls{
+    margin-bottom: 10px;
+}
+
+#maze-algorithms{
+    margin-bottom: 10px;
+}
+
+#maze-buttons{
+    margin-bottom: 10px;
+}
+
+#maze-instructions{
+    font-size: small;
+}
+
+.highlight{
+    color: #f00;
+}
+
+.solveHighlight{
+    color: #1ab306;
+}
