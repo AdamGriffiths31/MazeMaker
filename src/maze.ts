@@ -2,11 +2,17 @@ import { Generator } from './generator';
 
 export class Maze {
     public grid: string[][];
+    public rows: number;
+    public columns: number;
     private playerPosition: { row: number; column: number };
+    private targetElement: HTMLElement;
 
-    constructor(rows: number, columns: number) {
-        this.grid = new Generator(rows, columns).generateMaze();
+    constructor(rows: number, columns: number, methodName: string, targetElement: HTMLElement) {
+        this.grid = new Generator(rows, columns).generate(methodName);
         this.playerPosition = this.findPlayerPosition();
+        this.targetElement = targetElement;
+        this.rows = rows;
+        this.columns = columns;
     }
 
     setWall(row: number, column: number): void {
@@ -21,15 +27,19 @@ export class Maze {
         this.grid[row][column] = 'E';
     }
 
-    display(targetElement: HTMLElement): void {
+    display(): void {
         const highlightedContent = this.grid.map(row =>
             row.map(cell =>
                 (cell === 'X') ? `<span class="solveHighlight">${cell}</span>` :
-                (cell === 'P' || cell === 'E') ? `<span class="highlight">${cell}</span>` : cell
+                    (cell === 'P' || cell === 'E') ? `<span class="highlight">${cell}</span>` : cell
             ).join('')
         ).join('\n');
 
-        targetElement.innerHTML = highlightedContent;
+        this.targetElement.innerHTML = highlightedContent;
+    }
+
+    reset(): void {
+        this.grid = this.grid.map(row => row.map(cell => (cell === 'X') ? ' ' : cell));
     }
 
     findPlayerPosition(): { row: number; column: number } {

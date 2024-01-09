@@ -1,42 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Maze Maker</title>
 </head>
+
 <body>
 
-<h1>Maze Maker</h1>
-<pre id="maze-display"></pre>
+    <h1>Maze Maker</h1>
+    <div class="layout">
+        <pre id="maze-display"></pre>
+        <div class="maze-controls">
+            <div class="controls">
+                <div id="maze-controls">
+                    <label for="rows">Rows:</label>
+                    <input type="number" id="rows" name="rows" min="1" value="30">
 
-<div id="maze-controls">
-    <label for="rows">Rows:</label>
-    <input type="number" id="rows" name="rows" min="1" value="25">
+                    <label for="columns">Columns:</label>
+                    <input type="number" id="columns" name="columns" min="1" value="60">
+                </div>
 
-    <label for="columns">Columns:</label>
-    <input type="number" id="columns" name="columns" min="1" value="50">
-</div>
+                <div id="maze-algorithms">
+                    <label>Maze Algorithm:</label>
+                    <input type="radio" id="algorithm-recursive" name="algorithm" value="backtracking" checked>
+                    <label for="algorithm-recursive">Recursive Backtracking</label>
 
-<div id="maze-algorithms">
-    <label>Maze Algorithm:</label>
-    <input type="radio" id="algorithm-recursive" name="algorithm" value="recursive" checked>
-    <label for="algorithm-recursive">Recursive Backtracking</label>
+                    <input type="radio" id="algorithm-prim" name="algorithm" value="prim">
+                    <label for="algorithm-prim">Prim's Algorithm</label>
+                </div>
 
-    <input type="radio" id="algorithm-prim" name="algorithm" value="prim">
-    <label for="algorithm-prim">Prim's Algorithm</label>
-</div>
-
-<div id="maze-buttons">
-    <button id="generate">Generate</button>
-    <button id="solve">Solve</button>
-</div>
-
-<div id="maze-instructions">
-    <span>Use WASD to move the player.</span>
-</div>
-<script src="dist/bundle.js"></script>
-
+                <div id="maze-buttons">
+                    <button id="generate">Generate</button>
+                    <button id="solve">Solve</button>
+                    <button id="display">Display</button>
+                    <button id="reset">Reset</button>
+                    <button id="dfs">DFS</button>
+                </div>
+                <div id="maze-instructions">
+                    <span>Use WASD to move the player.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="dist/bundle.js"></script>
 </body>
+
 </html>

@@ -14,7 +14,16 @@ var Generator = /** @class */ (function () {
         this.columns = columns;
         this.maze = new Array(rows).fill(null).map(function () { return new Array(columns).fill(CellType.Wall); });
     }
-    Generator.prototype.generateMaze = function () {
+    Generator.prototype.generate = function (methodName) {
+        switch (methodName) {
+            case 'backtracking':
+                return this.backtracking();
+            case 'prims':
+                return this.primsAlgorithm();
+        }
+        return this.primsAlgorithm();
+    };
+    Generator.prototype.backtracking = function () {
         this.initializeGrid();
         var startingRow = Math.floor(Math.random() * this.rows);
         var startingColumn = Math.floor(Math.random() * this.columns);
@@ -61,6 +70,80 @@ var Generator = /** @class */ (function () {
     };
     Generator.prototype.primsAlgorithm = function () {
         this.initializeGrid();
+        var startingRow = Math.floor(Math.random() * this.rows);
+        var startingColumn = Math.floor(Math.random() * this.columns);
+        this.maze[startingRow][startingColumn] = CellType.Path;
+        var frontier = [];
+        frontier.push([startingRow, startingColumn]);
+        while (frontier.length > 0) {
+            var _a = frontier.pop(), x = _a[0], y = _a[1];
+            var neighbors = this.neighbors(x, y);
+            if (neighbors.length > 0) {
+                var _b = neighbors[Math.floor(Math.random() * neighbors.length)], nX = _b[0], nY = _b[1];
+                this.createCorridor(x, y, nX, nY);
+            }
+            var newFrontier = this.getFrontier(x, y);
+            if (newFrontier.length != 0) {
+                for (var _i = 0, newFrontier_1 = newFrontier; _i < newFrontier_1.length; _i++) {
+                    var _c = newFrontier_1[_i], nx = _c[0], ny = _c[1];
+                    frontier.push([nx, ny]);
+                }
+            }
+        }
+        this.maze[startingRow][startingColumn] = CellType.Start;
+        this.createEnd();
+        return this.maze;
+    };
+    Generator.prototype.getFrontier = function (x, y) {
+        var frontier = [];
+        var directions = [
+            [0, 2],
+            [2, 0],
+            [0, -2],
+            [-2, 0]
+        ];
+        for (var _i = 0, directions_2 = directions; _i < directions_2.length; _i++) {
+            var _a = directions_2[_i], dx = _a[0], dy = _a[1];
+            var nx = x + dx;
+            var ny = y + dy;
+            if (this.isValidFrontier(nx, ny)) {
+                frontier.push([nx, ny]);
+            }
+        }
+        return frontier;
+    };
+    Generator.prototype.neighbors = function (x, y) {
+        var neighbors = [];
+        var directions = [
+            [0, 2],
+            [2, 0],
+            [0, -2],
+            [-2, 0]
+        ];
+        for (var _i = 0, directions_3 = directions; _i < directions_3.length; _i++) {
+            var _a = directions_3[_i], dx = _a[0], dy = _a[1];
+            var nx = x + dx;
+            var ny = y + dy;
+            if (this.isValidPassage(nx, ny)) {
+                neighbors.push([nx, ny]);
+            }
+        }
+        return neighbors;
+    };
+    Generator.prototype.createCorridor = function (x, y, nX, nY) {
+        var dirX = Math.floor((x + nX) / 2);
+        var dirY = Math.floor((y + nY) / 2);
+        this.maze[dirX][dirY] = CellType.Path;
+        this.maze[x][y] = CellType.Path;
+    };
+    Generator.prototype.isValidPosition = function (x, y) {
+        return x >= 0 && x < this.rows && y >= 0 && y < this.columns;
+    };
+    Generator.prototype.isValidPassage = function (x, y) {
+        return this.isValidPosition(x, y) && this.maze[x][y] !== CellType.Wall;
+    };
+    Generator.prototype.isValidFrontier = function (x, y) {
+        return this.isValidPosition(x, y) && this.maze[x][y] === CellType.Wall;
     };
     return Generator;
 }());

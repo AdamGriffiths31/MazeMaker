@@ -40,3 +40,12 @@ pre {
 .solveHighlight{
     color: #1ab306;
 }
+
+
+body {
+    background-color:#C8C8C8
+}
+
+.maze-controls{
+    background-color: #B3B3B3;
+}

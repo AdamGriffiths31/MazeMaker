@@ -3,9 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Maze = void 0;
 var generator_1 = require("./generator");
 var Maze = /** @class */ (function () {
-    function Maze(rows, columns) {
-        this.grid = new generator_1.Generator(rows, columns).generateMaze();
+    function Maze(rows, columns, methodName, targetElement) {
+        this.grid = new generator_1.Generator(rows, columns).generate(methodName);
         this.playerPosition = this.findPlayerPosition();
+        this.targetElement = targetElement;
+        this.rows = rows;
+        this.columns = columns;
     }
     Maze.prototype.setWall = function (row, column) {
         this.grid[row][column] = '#';
@@ -16,14 +19,17 @@ var Maze = /** @class */ (function () {
     Maze.prototype.setExit = function (row, column) {
         this.grid[row][column] = 'E';
     };
-    Maze.prototype.display = function (targetElement) {
+    Maze.prototype.display = function () {
         var highlightedContent = this.grid.map(function (row) {
             return row.map(function (cell) {
                 return (cell === 'X') ? "<span class=\"solveHighlight\">".concat(cell, "</span>") :
                     (cell === 'P' || cell === 'E') ? "<span class=\"highlight\">".concat(cell, "</span>") : cell;
             }).join('');
         }).join('\n');
-        targetElement.innerHTML = highlightedContent;
+        this.targetElement.innerHTML = highlightedContent;
+    };
+    Maze.prototype.reset = function () {
+        this.grid = this.grid.map(function (row) { return row.map(function (cell) { return (cell === 'X') ? ' ' : cell; }); });
     };
     Maze.prototype.findPlayerPosition = function () {
         for (var row = 0; row < this.grid.length; row++) {
