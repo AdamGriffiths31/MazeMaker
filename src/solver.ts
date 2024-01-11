@@ -1,4 +1,25 @@
 import { Maze } from "./maze";
+class PriorityQueue {
+    private _array: any[];
+
+    constructor() {
+        this._array = [];
+    }
+
+    enqueue(priority: number, value: any): void {
+        this._array.push({priority, value});
+        this._array.sort((a, b) => a.priority - b.priority);
+    }
+
+    dequeue(): any {
+        return this._array.shift().value;
+    }
+
+    isEmpty(): boolean {
+        return !this._array.length;
+    }
+}
+
 class Cell {
     f: number;
     g: number;
@@ -85,7 +106,7 @@ export class MazeSolver {
 
         let cellDetails: Cell[][] = new Array(this.maze.rows);
         let closedList: boolean[][] = new Array(this.maze.rows);
-        let openList: Map<number, [number, number]> = new Map();
+        let openList: PriorityQueue = new PriorityQueue();
 
         for (let i = 0; i < this.maze.rows; i++) {
             closedList[i] = new Array(this.maze.columns).fill(false);
@@ -102,23 +123,19 @@ export class MazeSolver {
         cellDetails[start[0]][start[1]].parent_j = start[1];
 
         const directions = [
-            [0, 1],
+            [-1, 0],
             [1, 0],
+            [0, 1],
             [0, -1],
-            [-1, 0]
         ];
 
-        openList.set(0, start);
+        openList.enqueue(0, start);
 
-        while (openList.size > 0) {
-            const current: [number, number] = openList.values().next().value as [number, number];
-            console.log(current);
-            openList.delete(openList.keys().next().value);
-
+        while (!openList.isEmpty()) {
+            const current: [number, number] = openList.dequeue();
             const i = current[0];
             const j = current[1];
             closedList[i][j] = true;
-            this.grid[i][j] = 'X';
 
             for (const direction of directions) {
                 const newDirection = [i + direction[0], j + direction[1]] as [number, number];
@@ -138,14 +155,13 @@ export class MazeSolver {
                         const fNew = gNew + hNew;
 
                         if (cellDetails[newDirection[0]][newDirection[1]].f == 2147483647 || cellDetails[newDirection[0]][newDirection[1]].f > fNew) {
-                            openList.set(fNew, newDirection);
+                            openList.enqueue(fNew, newDirection);
                             cellDetails[newDirection[0]][newDirection[1]].f = fNew;
                             cellDetails[newDirection[0]][newDirection[1]].g = gNew;
                             cellDetails[newDirection[0]][newDirection[1]].h = hNew;
                             cellDetails[newDirection[0]][newDirection[1]].parent_i = i;
                             cellDetails[newDirection[0]][newDirection[1]].parent_j = j;
                         }
-
                     }
                 }
             }
@@ -188,9 +204,6 @@ export class MazeSolver {
                 found = await this.aStarAlgorithmo(display);
                 break;
         }
-        if (!found) {
-            alert('No solution found');
-        }
         this.grid[this.startRow][this.startCol] = 'P';
         return this.grid;
     }
@@ -198,7 +211,6 @@ export class MazeSolver {
     private delay(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-
 
     public getGrid(): string[][] {
         return this.grid;

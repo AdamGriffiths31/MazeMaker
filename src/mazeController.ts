@@ -84,8 +84,12 @@ export class MazeController {
   }
 
   private async solveMaze(method: string,display: boolean = false) {
+    if (this.maze.solved) {
+      return;
+    }
     const solved = await new MazeSolver(this.maze).solveMaze(method,display);
     if (this.targetElement && solved) {
+      this.maze.solved = true;
       this.maze.grid = solved;
       this.maze.display();
     }

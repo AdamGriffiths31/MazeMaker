@@ -110,10 +110,15 @@ var MazeController = /** @class */ (function () {
             var solved;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new solver_1.MazeSolver(this.maze).solveMaze(method, display)];
+                    case 0:
+                        if (this.maze.solved) {
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, new solver_1.MazeSolver(this.maze).solveMaze(method, display)];
                     case 1:
                         solved = _a.sent();
                         if (this.targetElement && solved) {
+                            this.maze.solved = true;
                             this.maze.grid = solved;
                             this.maze.display();
                         }

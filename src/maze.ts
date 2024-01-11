@@ -1,6 +1,8 @@
 import { Generator } from './generator';
 
 export class Maze {
+
+    public solved: boolean;
     public grid: string[][];
     public rows: number;
     public columns: number;
@@ -8,6 +10,7 @@ export class Maze {
     private targetElement: HTMLElement;
 
     constructor(rows: number, columns: number, methodName: string, targetElement: HTMLElement) {
+        this.solved = false;
         this.grid = new Generator(rows, columns).generate(methodName);
         this.playerPosition = this.findPlayerPosition();
         this.targetElement = targetElement;
@@ -40,6 +43,7 @@ export class Maze {
 
     reset(): void {
         this.grid = this.grid.map(row => row.map(cell => (cell === 'X') ? ' ' : cell));
+        this.solved = false;
     }
 
     findPlayerPosition(): { row: number; column: number } {

@@ -37,6 +37,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MazeSolver = void 0;
+var PriorityQueue = /** @class */ (function () {
+    function PriorityQueue() {
+        this._array = [];
+    }
+    PriorityQueue.prototype.enqueue = function (priority, value) {
+        this._array.push({ priority: priority, value: value });
+        this._array.sort(function (a, b) { return a.priority - b.priority; });
+    };
+    PriorityQueue.prototype.dequeue = function () {
+        return this._array.shift().value;
+    };
+    PriorityQueue.prototype.isEmpty = function () {
+        return !this._array.length;
+    };
+    return PriorityQueue;
+}());
 var Cell = /** @class */ (function () {
     function Cell() {
         this.f = 2147483647;
@@ -136,7 +152,7 @@ var MazeSolver = /** @class */ (function () {
                         console.log("Start: ".concat(start, " End: ").concat(end));
                         cellDetails = new Array(this.maze.rows);
                         closedList = new Array(this.maze.rows);
-                        openList = new Map();
+                        openList = new PriorityQueue();
                         for (i = 0; i < this.maze.rows; i++) {
                             closedList[i] = new Array(this.maze.columns).fill(false);
                             cellDetails[i] = new Array(this.maze.columns);
@@ -150,22 +166,19 @@ var MazeSolver = /** @class */ (function () {
                         cellDetails[start[0]][start[1]].parent_i = start[0];
                         cellDetails[start[0]][start[1]].parent_j = start[1];
                         directions = [
-                            [0, 1],
+                            [-1, 0],
                             [1, 0],
+                            [0, 1],
                             [0, -1],
-                            [-1, 0]
                         ];
-                        openList.set(0, start);
+                        openList.enqueue(0, start);
                         _a.label = 1;
                     case 1:
-                        if (!(openList.size > 0)) return [3 /*break*/, 7];
-                        current = openList.values().next().value;
-                        console.log(current);
-                        openList.delete(openList.keys().next().value);
+                        if (!!openList.isEmpty()) return [3 /*break*/, 7];
+                        current = openList.dequeue();
                         i = current[0];
                         j = current[1];
                         closedList[i][j] = true;
-                        this.grid[i][j] = 'X';
                         _i = 0, directions_1 = directions;
                         _a.label = 2;
                     case 2:
@@ -188,7 +201,7 @@ var MazeSolver = /** @class */ (function () {
                             hNew = this.calculateHValue(newDirection[0], newDirection[1], end);
                             fNew = gNew + hNew;
                             if (cellDetails[newDirection[0]][newDirection[1]].f == 2147483647 || cellDetails[newDirection[0]][newDirection[1]].f > fNew) {
-                                openList.set(fNew, newDirection);
+                                openList.enqueue(fNew, newDirection);
                                 cellDetails[newDirection[0]][newDirection[1]].f = fNew;
                                 cellDetails[newDirection[0]][newDirection[1]].g = gNew;
                                 cellDetails[newDirection[0]][newDirection[1]].h = hNew;
@@ -265,9 +278,6 @@ var MazeSolver = /** @class */ (function () {
                         found = _b.sent();
                         return [3 /*break*/, 5];
                     case 5:
-                        if (!found) {
-                            alert('No solution found');
-                        }
                         this.grid[this.startRow][this.startCol] = 'P';
                         return [2 /*return*/, this.grid];
                 }

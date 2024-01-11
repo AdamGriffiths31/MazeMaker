@@ -4,6 +4,7 @@ exports.Maze = void 0;
 var generator_1 = require("./generator");
 var Maze = /** @class */ (function () {
     function Maze(rows, columns, methodName, targetElement) {
+        this.solved = false;
         this.grid = new generator_1.Generator(rows, columns).generate(methodName);
         this.playerPosition = this.findPlayerPosition();
         this.targetElement = targetElement;
@@ -30,6 +31,7 @@ var Maze = /** @class */ (function () {
     };
     Maze.prototype.reset = function () {
         this.grid = this.grid.map(function (row) { return row.map(function (cell) { return (cell === 'X') ? ' ' : cell; }); });
+        this.solved = false;
     };
     Maze.prototype.findPlayerPosition = function () {
         for (var row = 0; row < this.grid.length; row++) {
