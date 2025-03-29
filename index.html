@@ -1,52 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <title>Maze Maker</title>
 </head>
-
 <body>
-    <div class="header">
-        <h1>Maze Maker</h1>
-    </div>
-    <div class="layout">
-        <pre id="maze-display"></pre>
-        <div class="maze-controls">
-            <div class="controls">
-                <div id="maze-controls">
-                    <label for="rows">Rows:</label>
-                    <input type="number" id="rows" name="rows" class="number_input" min="1" value="30">
-
-                    <label for="columns">Columns:</label>
-                    <input type="number" id="columns" name="columns" class="number_input" min="1" value="60">
-                </div>
-
-                <div id="maze-algorithms">
-                    <label>Maze Algorithm:</label>
-                    <input type="radio" id="algorithm-recursive" name="algorithm" value="backtracking" checked>
-                    <label for="algorithm-recursive">Recursive Backtracking</label>
-
-                    <input type="radio" id="algorithm-prim" name="algorithm" value="prim">
-                    <label for="algorithm-prim">Prim's Algorithm</label>
-                </div>
-
-                <div id="maze-buttons">
-                    <button class="input_button" id="generate">Generate</button>
-                    <button class="input_button" id="reset">Reset</button>
-                    <button class="input_button" id="solve">A* Solve</button>
-                    <button class="input_button" id="display">Display</button>
-                    <button class="input_button" id="dfs">DFS</button>
-                </div>
-                <div id="maze-instructions">
-                    <span>Use WASD to move the player.</span>
-                </div>
-            </div>
+    <h1>Maze Generator</h1>
+    <canvas id="mazeCanvas" width="400" height="400"></canvas>
+    <div class="controls">
+        <label for="delayInput">Delay (ms):</label>
+        <input type="number" id="delayInput" value="100" min="0">
+        <label for="methodSelect">Method:</label>
+        <select id="methodSelect">
+            <option value="Prim">Prim's Algorithm</option>
+            <option value="Recursive Backtracking">Recursive Backtracking</option>
+            <option value="Kruskal">Kruskal's Algorithm</option>
+        </select>
+        <div class="dimension-inputs">
+            <label for="widthInput">Width:</label>
+            <input type="number" id="widthInput" value="20" min="20" max="50">
+            <label for="heightInput">Height:</label>
+            <input type="number" id="heightInput" value="20" min="20" max="50">
         </div>
     </div>
-    <script src="dist/bundle.js"></script>
-</body>
+    <div class="button-group">
+        <button id="solveButton">Solve</button>
+        <button id="newMazeButton">New Maze</button>
+    </div>
 
+    <script src="mazeGenerator.js"></script>
+    <script>
+        const solveButton = document.getElementById('solveButton');
+        const delayInput = document.getElementById('delayInput');
+        let solving = false;
+
+        function toggleSolve() {
+            if (solving) {
+                solving = false;
+                solveButton.textContent = 'Solve';
+            } else {
+                solving = true;
+                solveButton.textContent = 'Stop';
+                const delay = parseInt(delayInput.value, 10);
+                solve(delay);
+            }
+        }
+
+        solveButton.addEventListener('click', toggleSolve);
+    </script>
+</body>
 </html>
